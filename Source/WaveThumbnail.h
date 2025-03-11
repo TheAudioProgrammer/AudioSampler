@@ -10,32 +10,32 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include <juce_graphics/juce_graphics.h>
 #include "PluginProcessor.h"
 
 //==============================================================================
 /*
 */
-class WaveThumbnail : public Component,
-                      public FileDragAndDropTarget
+class WaveThumbnail : public juce::Component,
+                      public juce::FileDragAndDropTarget
 {
 public:
-    WaveThumbnail (HelloSamplerAudioProcessor& p);
-    ~WaveThumbnail();
+    explicit WaveThumbnail (TapAudioSamplerAudioProcessor& p);
+    ~WaveThumbnail() override;
 
-    void paint (Graphics&) override;
+    void paint (juce::Graphics&) override;
     void resized() override;
     
-    bool isInterestedInFileDrag (const StringArray& files) override;
-    void filesDropped (const StringArray& files, int x, int y) override;
+    bool isInterestedInFileDrag (const juce::StringArray& files) override;
+    void filesDropped (const juce::StringArray& files, int x, int y) override;
 
 private:
     std::vector<float> mAudioPoints;
     bool mShouldBePainting { false };
     
-    String mFileName { "" };
+    juce::String mFileName { "" };
     
-    HelloSamplerAudioProcessor& processor;
+    TapAudioSamplerAudioProcessor& processor;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveThumbnail)
 };

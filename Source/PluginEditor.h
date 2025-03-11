@@ -1,16 +1,7 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
 
 #pragma once
 
-#include <JuceHeader.h>
+#include <juce_graphics/juce_graphics.h>
 #include "PluginProcessor.h"
 #include "WaveThumbnail.h"
 #include "ADSRComponent.h"
@@ -18,25 +9,25 @@
 //==============================================================================
 /**
 */
-class HelloSamplerAudioProcessorEditor  : public AudioProcessorEditor,
-                                          public Timer
+class TapAudioSamplerAudioProcessorEditor final : public juce::AudioProcessorEditor,
+                                                  public juce::Timer
 {
 public:
-    HelloSamplerAudioProcessorEditor (HelloSamplerAudioProcessor&);
-    ~HelloSamplerAudioProcessorEditor();
+    explicit TapAudioSamplerAudioProcessorEditor (TapAudioSamplerAudioProcessor&);
+    ~TapAudioSamplerAudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (Graphics&) override;
+    void paint (juce::Graphics&) override;
     void resized() override;
     
     void timerCallback() override;
 
 private:    
     WaveThumbnail mWaveThumbnail;
-    ADSRComponent mADSR;
-    ImageComponent mImageComponent;
+    AdsrComponent mADSR;
+    juce::ImageComponent mImageComponent;
     
-    HelloSamplerAudioProcessor& processor;
+    TapAudioSamplerAudioProcessor& processor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HelloSamplerAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TapAudioSamplerAudioProcessorEditor)
 };
