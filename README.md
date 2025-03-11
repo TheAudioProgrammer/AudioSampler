@@ -14,8 +14,10 @@ Ensure you have the following installed:
 
 1. **Clone the repository:**
 2. **Navigate into the repository folder**
-3. **Create a folder called build** 
+3. **Create a folder called build**
+    ```sh 
     $ cmake -B build
+    ```
 
     **Optional:** You can also invoke the `-G` flag to build project files for the IDE of your choice.  
     
@@ -34,6 +36,6 @@ Ensure you have the following installed:
     $ cmake -S . -B build -G "Visual Studio 17 2022"
     ```
 
-4. **Navigate into the `build` folder and open the project file**
+5. **Navigate into the `build` folder and open the project file**
 
 
