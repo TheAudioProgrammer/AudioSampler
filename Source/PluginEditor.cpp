@@ -4,18 +4,18 @@
 
 //==============================================================================
 TapAudioSamplerAudioProcessorEditor::TapAudioSamplerAudioProcessorEditor (TapAudioSamplerAudioProcessor& p)
-    : AudioProcessorEditor (&p), mWaveThumbnail (p), mADSR (p), processor (p)
+    : AudioProcessorEditor (&p), thumbnail (p), adsr (p), processor (p)
 {
-    // auto tapImage = juce::ImageCache::getFromMemory (juce::BinaryData::TAP_png, juce::BinaryData::TAP_pngSize);
+    auto tapImage = juce::ImageCache::getFromMemory(BinaryData::TapLogo_png, BinaryData::TapLogo_pngSize);
     
-    // if (! tapImage.isNull())
-    //     mImageComponent.setImage (tapImage, juce::RectanglePlacement::stretchToFit);
-    // else
-    //     jassert (! tapImage.isNull());
+    if (! tapImage.isNull())
+        imageComponent.setImage (tapImage, juce::RectanglePlacement::fillDestination);
+    else
+        jassert (! tapImage.isNull());
     
-    addAndMakeVisible (mWaveThumbnail);
-    addAndMakeVisible (mADSR);
-    addAndMakeVisible (mImageComponent);
+    addAndMakeVisible (thumbnail);
+    addAndMakeVisible (adsr);
+    addAndMakeVisible (imageComponent);
     
     startTimerHz (30);
     
@@ -35,9 +35,9 @@ void TapAudioSamplerAudioProcessorEditor::paint (juce::Graphics& g)
 
 void TapAudioSamplerAudioProcessorEditor::resized()
 {
-    mWaveThumbnail.setBoundsRelative (0.0f, 0.25f, 1.0f, 0.5);
-    mADSR.setBoundsRelative (0.0f, 0.75f, 1.0f, 0.25f);
-    mImageComponent.setBoundsRelative (0.0f, 0.0f, 0.5f, 0.25f);
+    thumbnail.setBoundsRelative (0.0f, 0.25f, 1.0f, 0.5);
+    adsr.setBoundsRelative (0.0f, 0.75f, 1.0f, 0.25f);
+    imageComponent.setBoundsRelative (0.0f, 0.0f, 0.5f, 0.25f);
 }
 
 void TapAudioSamplerAudioProcessorEditor::timerCallback()

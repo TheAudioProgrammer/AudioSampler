@@ -2,6 +2,7 @@
 #pragma once
 
 #include <juce_graphics/juce_graphics.h>
+#include "BinaryData.h"
 #include "PluginProcessor.h"
 #include "WaveThumbnail.h"
 #include "ADSRComponent.h"
@@ -23,9 +24,9 @@ public:
     void timerCallback() override;
 
 private:    
-    WaveThumbnail mWaveThumbnail;
-    AdsrComponent mADSR;
-    juce::ImageComponent mImageComponent;
+    WaveThumbnail thumbnail;
+    AdsrComponent adsr;
+    juce::ImageComponent imageComponent;
     
     TapAudioSamplerAudioProcessor& processor;
 

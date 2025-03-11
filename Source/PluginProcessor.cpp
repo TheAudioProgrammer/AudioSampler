@@ -12,21 +12,21 @@ TapAudioSamplerAudioProcessor::TapAudioSamplerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ), mAPVTS (*this, nullptr, "Parameters", createParameters())
+                       ), apvts (*this, nullptr, "Parameters", createParameters())
 #endif
 {
-    mFormatManager.registerBasicFormats();
-    mAPVTS.state.addListener (this);
+    formatManager.registerBasicFormats();
+    apvts.state.addListener (this);
     
-    for (int i = 0; i < mNumVoices; i++)
+    for (int i = 0; i < numVoices; i++)
     {
-        mSampler.addVoice (new juce::SamplerVoice());
+        sampler.addVoice (new juce::SamplerVoice());
     }
 }
 
 TapAudioSamplerAudioProcessor::~TapAudioSamplerAudioProcessor()
 {
-    mAPVTS.state.removeListener (this);
+    apvts.state.removeListener (this);
 }
 
 //==============================================================================
@@ -94,7 +94,7 @@ void TapAudioSamplerAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void TapAudioSamplerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    mSampler.setCurrentPlaybackSampleRate (sampleRate);
+    sampler.setCurrentPlaybackSampleRate (sampleRate);
     updateADSR();
 }
 
@@ -137,7 +137,7 @@ void TapAudioSamplerAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    if (mShouldUpdate)
+    if (shouldUpdate)
     {
         updateADSR();
     }
@@ -149,14 +149,14 @@ void TapAudioSamplerAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     while (it.getNextEvent (m, sample))
     {
         if (m.isNoteOn())
-            mIsNotePlayed = true;
+            isNotePlayed = true;
         else if (m.isNoteOff())
-            mIsNotePlayed = false;
+            isNotePlayed = false;
     }
     
-    mSampleCount = mIsNotePlayed ? mSampleCount += buffer.getNumSamples() : 0;
+    sampleCount = isNotePlayed ? sampleCount += buffer.getNumSamples() : 0;
 
-    mSampler.renderNextBlock (buffer, midiMessages, 0, buffer.getNumSamples());
+    sampler.renderNextBlock (buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
@@ -186,7 +186,7 @@ void TapAudioSamplerAudioProcessor::setStateInformation (const void* data, int s
 
 void TapAudioSamplerAudioProcessor::loadFile()
 {
-    mSampler.clearSounds();
+    sampler.clearSounds();
     
     juce::FileChooser chooser { "Please load a file" };
 
@@ -196,12 +196,12 @@ void TapAudioSamplerAudioProcessor::loadFile()
         auto file = fc.getResult();
 
         // the reader can be a local variable here since it's not needed by the SamplerSound after this
-        std::unique_ptr<juce::AudioFormatReader> reader{ mFormatManager.createReaderFor(file) };
+        std::unique_ptr<juce::AudioFormatReader> reader{ formatManager.createReaderFor(file) };
         if (reader)
         {
             juce::BigInteger range;
             range.setRange(0, 128, true);
-            mSampler.addSound(new juce::SamplerSound("Sample", *reader, range, 60, 0.1, 0.1, 10.0));
+            sampler.addSound(new juce::SamplerSound("Sample", *reader, range, 60, 0.1, 0.1, 10.0));
         }
     });
     
@@ -210,16 +210,16 @@ void TapAudioSamplerAudioProcessor::loadFile()
 
 void TapAudioSamplerAudioProcessor::loadFile (const juce::String& path)
 {
-    mSampler.clearSounds();
+    sampler.clearSounds();
     
     auto file = juce::File (path);
     // the reader can be a local variable here since it's not needed by the other classes after this
-    std::unique_ptr<juce::AudioFormatReader> reader{ mFormatManager.createReaderFor(file) };
+    std::unique_ptr<juce::AudioFormatReader> reader{ formatManager.createReaderFor(file) };
     if (reader)
     {
         juce::BigInteger range;
         range.setRange(0, 128, true);
-        mSampler.addSound(new juce::SamplerSound("Sample", *reader, range, 60, 0.1, 0.1, 10.0));
+        sampler.addSound(new juce::SamplerSound("Sample", *reader, range, 60, 0.1, 0.1, 10.0));
         updateADSR();
     }
     
@@ -228,7 +228,7 @@ void TapAudioSamplerAudioProcessor::loadFile (const juce::String& path)
 juce::AudioBuffer<float>& TapAudioSamplerAudioProcessor::getWaveForm()
 {
     // get the last added synth sound as a SamplerSound*
-    auto sound = dynamic_cast<juce::SamplerSound*>(mSampler.getSound(mSampler.getNumSounds() - 1).get());
+    auto sound = dynamic_cast<juce::SamplerSound*>(sampler.getSound(sampler.getNumSounds() - 1).get());
     if (sound)
     {
         return *sound->getAudioData();
@@ -241,18 +241,18 @@ juce::AudioBuffer<float>& TapAudioSamplerAudioProcessor::getWaveForm()
 
 void TapAudioSamplerAudioProcessor::updateADSR()
 {
-    mShouldUpdate = false;
+    shouldUpdate = false;
     
-    mADSRParams.attack = mAPVTS.getRawParameterValue ("ATTACK")->load();
-    mADSRParams.decay = mAPVTS.getRawParameterValue ("DECAY")->load();
-    mADSRParams.sustain = mAPVTS.getRawParameterValue ("SUSTAIN")->load();
-    mADSRParams.release = mAPVTS.getRawParameterValue ("RELEASE")->load();
+    adsrParams.attack = apvts.getRawParameterValue ("ATTACK")->load();
+    adsrParams.decay = apvts.getRawParameterValue ("DECAY")->load();
+    adsrParams.sustain = apvts.getRawParameterValue ("SUSTAIN")->load();
+    adsrParams.release = apvts.getRawParameterValue ("RELEASE")->load();
     
-    for (int i = 0; i < mSampler.getNumSounds(); ++i)
+    for (int i = 0; i < sampler.getNumSounds(); ++i)
     {
-        if (auto sound = dynamic_cast<juce::SamplerSound*>(mSampler.getSound(i).get()))
+        if (auto sound = dynamic_cast<juce::SamplerSound*>(sampler.getSound(i).get()))
         {
-            sound->setEnvelopeParameters (mADSRParams);
+            sound->setEnvelopeParameters (adsrParams);
         }
     }
 }
@@ -271,7 +271,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout TapAudioSamplerAudioProcesso
 
 void TapAudioSamplerAudioProcessor::valueTreePropertyChanged (juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property)
 {
-    mShouldUpdate = true;
+    shouldUpdate = true;
 }
 
 //==============================================================================

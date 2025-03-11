@@ -30,10 +30,10 @@ public:
     void filesDropped (const juce::StringArray& files, int x, int y) override;
 
 private:
-    std::vector<float> mAudioPoints;
-    bool mShouldBePainting { false };
+    std::vector<float> audioPoints;
+    bool shouldBePainting { false };
     
-    juce::String mFileName { "" };
+    juce::String fileName { "" };
     
     TapAudioSamplerAudioProcessor& processor;
     

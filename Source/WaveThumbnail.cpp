@@ -31,7 +31,7 @@ void WaveThumbnail::paint (juce::Graphics& g)
     if (waveform.getNumSamples() > 0)
     {
         juce::Path p;
-        mAudioPoints.clear();
+        audioPoints.clear();
         
         
         auto ratio = waveform.getNumSamples() / getWidth();
@@ -40,16 +40,16 @@ void WaveThumbnail::paint (juce::Graphics& g)
         //scale audio file to window on x axis
         for (int sample = 0; sample < waveform.getNumSamples(); sample+=ratio)
         {
-            mAudioPoints.push_back (buffer[sample]);
+            audioPoints.push_back (buffer[sample]);
         }
         
         g.setColour (juce::Colours::yellow);
         p.startNewSubPath (0, getHeight() / 2);
         
         //scale on y axis
-        for (int sample = 0; sample < mAudioPoints.size(); ++sample)
+        for (int sample = 0; sample < audioPoints.size(); ++sample)
         {
-            auto point = juce::jmap<float> (mAudioPoints[sample], -1.0f, 1.0f, getHeight(), 0);
+            auto point = juce::jmap<float> (audioPoints[sample], -1.0f, 1.0f, getHeight(), 0);
             p.lineTo (sample, point);
         }
         
@@ -58,7 +58,7 @@ void WaveThumbnail::paint (juce::Graphics& g)
         g.setColour (juce::Colours::white);
         g.setFont (15.0f);
         auto textBounds = getLocalBounds().reduced (10, 10);
-        g.drawFittedText (mFileName, textBounds, juce::Justification::topRight, 1);
+        g.drawFittedText (fileName, textBounds, juce::Justification::topRight, 1);
         
         auto playHeadPosition = juce::jmap<int> (processor.getSampleCount(), 0, processor.getWaveForm().getNumSamples(), 0, getWidth());
         
@@ -103,7 +103,7 @@ void WaveThumbnail::filesDropped (const juce::StringArray& files, int x, int y)
         if (isInterestedInFileDrag (file))
         {
             auto myFile = std::make_unique<juce::File>(file);
-            mFileName = myFile->getFileNameWithoutExtension();
+            fileName = myFile->getFileNameWithoutExtension();
             
             processor.loadFile (file);
         }

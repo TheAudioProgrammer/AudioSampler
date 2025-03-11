@@ -51,33 +51,33 @@ public:
     void loadFile();
     void loadFile (const juce::String& path);
     
-    int getNumSamplerSounds() { return mSampler.getNumSounds(); }
+    int getNumSamplerSounds() { return sampler.getNumSounds(); }
     juce::AudioBuffer<float>& getWaveForm();
     
     void updateADSR();
-    juce::ADSR::Parameters& getADSRParams() { return mADSRParams; }
+    juce::ADSR::Parameters& getAdsrParams() { return adsrParams; }
     
-    juce::AudioProcessorValueTreeState& getValueTree() { return mAPVTS; }
-    std::atomic<bool>& isNotePlayed() { return mIsNotePlayed; }
-    std::atomic<int>& getSampleCount() { return mSampleCount; }
+    juce::AudioProcessorValueTreeState& getValueTree() { return apvts; }
+    std::atomic<bool>& isNoteCurrentlyPlayed() { return isNotePlayed; }
+    std::atomic<int>& getSampleCount() { return sampleCount; }
 
 private:
-    juce::Synthesiser mSampler;
-    const int mNumVoices { 3 };
+    juce::Synthesiser sampler;
+    const int numVoices { 3 };
     
     
-    juce::ADSR::Parameters mADSRParams;
+    juce::ADSR::Parameters adsrParams;
     
-    juce::AudioFormatManager mFormatManager;
+    juce::AudioFormatManager formatManager;
     
     
-    juce::AudioProcessorValueTreeState mAPVTS;
+    juce::AudioProcessorValueTreeState apvts;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     void valueTreePropertyChanged (juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) override;
     
-    std::atomic<bool> mShouldUpdate { false };
-    std::atomic<bool> mIsNotePlayed { false };
-    std::atomic<int> mSampleCount { 0 };
+    std::atomic<bool> shouldUpdate { false };
+    std::atomic<bool> isNotePlayed { false };
+    std::atomic<int> sampleCount { 0 };
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TapAudioSamplerAudioProcessor)

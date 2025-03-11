@@ -26,13 +26,13 @@ public:
     void resized() override;
 
 private:
-    juce::Slider mAttackSlider, mDecaySlider, mSustainSlider, mReleaseSlider;
-    juce::Label mAttackLabel, mDecayLabel, mSustainLabel, mReleaseLabel;
+    juce::Slider attackSlider, decaySlider, sustainSlider, releaseSlider;
+    juce::Label attackLabel, decayLabel, sustainLabel, releaseLabel;
     
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mAttackAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mDecayAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mSustainAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mReleaseAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decayAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sustainAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseAttachment;
     
     TapAudioSamplerAudioProcessor& processor;
     

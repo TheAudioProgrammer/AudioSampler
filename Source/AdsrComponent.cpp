@@ -14,60 +14,56 @@
 AdsrComponent::AdsrComponent (TapAudioSamplerAudioProcessor& p) : processor (p)
 {
     //Attack Slider
-    mAttackSlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
-    mAttackSlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
-    mAttackSlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
-    //mAttackSlider.setRange (0.0f, 5.0f, 0.01f);
-    addAndMakeVisible (mAttackSlider);
+    attackSlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
+    attackSlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
+    attackSlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
+    addAndMakeVisible (attackSlider);
     
-    mAttackLabel.setFont (10.0f);
-    mAttackLabel.setText ("Attack", juce::NotificationType::dontSendNotification);
-    mAttackLabel.setJustificationType (juce::Justification::centredTop);
-    mAttackLabel.attachToComponent (&mAttackSlider, false);
+    attackLabel.setFont (10.0f);
+    attackLabel.setText ("Attack", juce::NotificationType::dontSendNotification);
+    attackLabel.setJustificationType (juce::Justification::centredTop);
+    attackLabel.attachToComponent (&attackSlider, false);
     
-    mAttackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "ATTACK", mAttackSlider);
+    attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "ATTACK", attackSlider);
     
     //Decay Slider
-    mDecaySlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
-    mDecaySlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
-    mDecaySlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
-    //mDecaySlider.setRange (0.0f, 5.0f, 0.01f);
-    addAndMakeVisible (mDecaySlider);
+    decaySlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
+    decaySlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
+    decaySlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
+    addAndMakeVisible (decaySlider);
     
-    mDecayLabel.setFont (10.0f);
-    mDecayLabel.setText ("Decay", juce::NotificationType::dontSendNotification);
-    mDecayLabel.setJustificationType (juce::Justification::centredTop);
-    mDecayLabel.attachToComponent (&mDecaySlider, false);
+    decayLabel.setFont (10.0f);
+    decayLabel.setText ("Decay", juce::NotificationType::dontSendNotification);
+    decayLabel.setJustificationType (juce::Justification::centredTop);
+    decayLabel.attachToComponent (&decaySlider, false);
     
-    mDecayAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "DECAY", mDecaySlider);
+    decayAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "DECAY", decaySlider);
     
     //Sustain Slider
-    mSustainSlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
-    mSustainSlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
-    mSustainSlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
-    //mSustainSlider.setRange (0.0f, 1.0f, 0.01f);
-    addAndMakeVisible (mSustainSlider);
+    sustainSlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
+    sustainSlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
+    sustainSlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
+    addAndMakeVisible (sustainSlider);
     
-    mSustainLabel.setFont (10.0f);
-    mSustainLabel.setText ("Sustain", juce::NotificationType::dontSendNotification);
-    mSustainLabel.setJustificationType (juce::Justification::centredTop);
-    mSustainLabel.attachToComponent (&mSustainSlider, false);
+    sustainLabel.setFont (10.0f);
+    sustainLabel.setText ("Sustain", juce::NotificationType::dontSendNotification);
+    sustainLabel.setJustificationType (juce::Justification::centredTop);
+    sustainLabel.attachToComponent (&sustainSlider, false);
     
-    mSustainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "SUSTAIN", mSustainSlider);
+    sustainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "SUSTAIN", sustainSlider);
     
     //Release Slider
-    mReleaseSlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
-    mReleaseSlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
-    mReleaseSlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
-    //mReleaseSlider.setRange (0.0f, 5.0f, 0.01f);
-    addAndMakeVisible (mReleaseSlider);
+    releaseSlider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
+    releaseSlider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 40, 20);
+    releaseSlider.setColour (juce::Slider::ColourIds::thumbColourId, juce::Colours::red);
+    addAndMakeVisible (releaseSlider);
     
-    mReleaseLabel.setFont (10.0f);
-    mReleaseLabel.setText ("Release", juce::NotificationType::dontSendNotification);
-    mReleaseLabel.setJustificationType (juce::Justification::centredTop);
-    mReleaseLabel.attachToComponent (&mReleaseSlider, false);
+    releaseLabel.setFont (10.0f);
+    releaseLabel.setText ("Release", juce::NotificationType::dontSendNotification);
+    releaseLabel.setJustificationType (juce::Justification::centredTop);
+    releaseLabel.attachToComponent (&releaseSlider, false);
     
-    mReleaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "RELEASE", mReleaseSlider);
+    releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processor.getValueTree(), "RELEASE", releaseSlider);
 }
 
 void AdsrComponent::paint (juce::Graphics& g)
@@ -82,8 +78,8 @@ void AdsrComponent::resized()
     const auto dialWidth = 0.1f;
     const auto dialHeight = 0.75f;
     
-    mAttackSlider.setBoundsRelative (startX, startY, dialWidth, dialHeight);
-    mDecaySlider.setBoundsRelative (startX + dialWidth, startY, dialWidth, dialHeight);
-    mSustainSlider.setBoundsRelative (startX + (dialWidth * 2), startY, dialWidth, dialHeight);
-    mReleaseSlider.setBoundsRelative (startX + (dialWidth * 3), startY, dialWidth, dialHeight);
+    attackSlider.setBoundsRelative (startX, startY, dialWidth, dialHeight);
+    decaySlider.setBoundsRelative (startX + dialWidth, startY, dialWidth, dialHeight);
+    sustainSlider.setBoundsRelative (startX + (dialWidth * 2), startY, dialWidth, dialHeight);
+    releaseSlider.setBoundsRelative (startX + (dialWidth * 3), startY, dialWidth, dialHeight);
 }

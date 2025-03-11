@@ -39,6 +39,10 @@ set(SourceFiles
         Source/WaveThumbnail.h
 )
 
+juce_add_binary_data(ProjectResources SOURCES
+        Resources/TapLogo.png
+)
+
 # Change these to your own preferences
 juce_add_plugin(${PROJECT_NAME}
         COMPANY_NAME theaudioprogrammer
@@ -85,5 +89,6 @@ target_link_libraries(${PROJECT_NAME}
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
+        ProjectResources
 )
 
