@@ -141,16 +141,14 @@ void TapAudioSamplerAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     {
         updateADSR();
     }
-    
-    juce::MidiMessage m;
-    juce::MidiBuffer::Iterator it { midiMessages };
-    int sample;
-    
-    while (it.getNextEvent (m, sample))
+
+    for (const auto metadata : midiMessages)
     {
-        if (m.isNoteOn())
+        const auto message = metadata.getMessage();
+
+        if (message.isNoteOn())
             isNotePlayed = true;
-        else if (m.isNoteOff())
+        else if (message.isNoteOff())
             isNotePlayed = false;
     }
     
@@ -211,31 +209,31 @@ void TapAudioSamplerAudioProcessor::loadFile()
 void TapAudioSamplerAudioProcessor::loadFile (const juce::String& path)
 {
     sampler.clearSounds();
-    
-    auto file = juce::File (path);
+
+    const auto file = juce::File (path);
+
     // the reader can be a local variable here since it's not needed by the other classes after this
-    std::unique_ptr<juce::AudioFormatReader> reader{ formatManager.createReaderFor(file) };
-    if (reader)
+    if (const std::unique_ptr<juce::AudioFormatReader> reader{ formatManager.createReaderFor(file) })
     {
         juce::BigInteger range;
         range.setRange(0, 128, true);
         sampler.addSound(new juce::SamplerSound("Sample", *reader, range, 60, 0.1, 0.1, 10.0));
         updateADSR();
     }
-    
 }
 
-juce::AudioBuffer<float>& TapAudioSamplerAudioProcessor::getWaveForm()
+juce::AudioBuffer<float>& TapAudioSamplerAudioProcessor::getWaveForm() const
 {
     // get the last added synth sound as a SamplerSound*
-    auto sound = dynamic_cast<juce::SamplerSound*>(sampler.getSound(sampler.getNumSounds() - 1).get());
-    if (sound)
+    if (const auto sound = dynamic_cast<juce::SamplerSound*>(sampler.getSound(sampler.getNumSounds() - 1).get()))
     {
         return *sound->getAudioData();
     }
+
     // just in case it somehow happens that the sound doesn't exist or isn't a SamplerSound,
     // return a static instance of an empty AudioBuffer here...
     static juce::AudioBuffer<float> dummybuffer;
+
     return dummybuffer;
 }
 

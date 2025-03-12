@@ -52,7 +52,7 @@ public:
     void loadFile (const juce::String& path);
     
     int getNumSamplerSounds() { return sampler.getNumSounds(); }
-    juce::AudioBuffer<float>& getWaveForm();
+    juce::AudioBuffer<float>& getWaveForm() const;
     
     void updateADSR();
     juce::ADSR::Parameters& getAdsrParams() { return adsrParams; }
@@ -64,15 +64,12 @@ public:
 private:
     juce::Synthesiser sampler;
     const int numVoices { 3 };
-    
-    
     juce::ADSR::Parameters adsrParams;
-    
     juce::AudioFormatManager formatManager;
     
-    
     juce::AudioProcessorValueTreeState apvts;
-    juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     void valueTreePropertyChanged (juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) override;
     
     std::atomic<bool> shouldUpdate { false };
