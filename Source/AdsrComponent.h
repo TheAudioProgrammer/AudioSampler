@@ -17,7 +17,7 @@
 //==============================================================================
 /*
 */
-class AdsrComponent : public juce::Component
+class AdsrComponent final : public juce::Component
 {
 public:
     explicit AdsrComponent (TapAudioSamplerAudioProcessor& p);

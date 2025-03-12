@@ -73,10 +73,10 @@ void AdsrComponent::paint (juce::Graphics& g)
 
 void AdsrComponent::resized()
 {
-    const auto startX = 0.6f;
-    const auto startY = 0.2f;
-    const auto dialWidth = 0.1f;
-    const auto dialHeight = 0.75f;
+    constexpr auto startX = 0.6f;
+    constexpr auto startY = 0.2f;
+    constexpr auto dialWidth = 0.1f;
+    constexpr auto dialHeight = 0.75f;
     
     attackSlider.setBoundsRelative (startX, startY, dialWidth, dialHeight);
     decaySlider.setBoundsRelative (startX + dialWidth, startY, dialWidth, dialHeight);

@@ -191,19 +191,16 @@ void TapAudioSamplerAudioProcessor::loadFile()
     chooser.launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
         [this](const juce::FileChooser& fc)
     {
-        auto file = fc.getResult();
+        const auto file = fc.getResult();
 
         // the reader can be a local variable here since it's not needed by the SamplerSound after this
-        std::unique_ptr<juce::AudioFormatReader> reader{ formatManager.createReaderFor(file) };
-        if (reader)
+        if (const std::unique_ptr<juce::AudioFormatReader> reader{ formatManager.createReaderFor(file) })
         {
             juce::BigInteger range;
             range.setRange(0, 128, true);
             sampler.addSound(new juce::SamplerSound("Sample", *reader, range, 60, 0.1, 0.1, 10.0));
         }
     });
-    
-    
 }
 
 void TapAudioSamplerAudioProcessor::loadFile (const juce::String& path)

@@ -21,7 +21,6 @@ class WaveThumbnail : public juce::Component,
 {
 public:
     explicit WaveThumbnail (TapAudioSamplerAudioProcessor& p);
-    ~WaveThumbnail() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;

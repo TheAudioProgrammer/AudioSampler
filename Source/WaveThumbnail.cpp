@@ -15,42 +15,39 @@ WaveThumbnail::WaveThumbnail (TapAudioSamplerAudioProcessor& p) : processor (p)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-
-}
-
-WaveThumbnail::~WaveThumbnail()
-{
 }
 
 void WaveThumbnail::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colours::cadetblue.darker());
-    
-    auto waveform = processor.getWaveForm();
+
+    const auto waveform = processor.getWaveForm();
     
     if (waveform.getNumSamples() > 0)
     {
         juce::Path p;
         audioPoints.clear();
+
+
+        const auto ratio = waveform.getNumSamples() / getWidth();
+        const auto buffer = waveform.getReadPointer (0);
         
-        
-        auto ratio = waveform.getNumSamples() / getWidth();
-        auto buffer = waveform.getReadPointer (0);
-        
-        //scale audio file to window on x axis
+        //scale audio file to window on x-axis
         for (int sample = 0; sample < waveform.getNumSamples(); sample+=ratio)
         {
             audioPoints.push_back (buffer[sample]);
         }
-        
+
+        const auto height = static_cast<float>(getHeight());
+
         g.setColour (juce::Colours::yellow);
-        p.startNewSubPath (0, getHeight() / 2);
+        p.startNewSubPath (0.0f, height / 2.0f);
         
         //scale on y axis
         for (int sample = 0; sample < audioPoints.size(); ++sample)
         {
-            auto point = juce::jmap<float> (audioPoints[sample], -1.0f, 1.0f, getHeight(), 0);
-            p.lineTo (sample, point);
+            auto point = juce::jmap<float> (audioPoints[sample], -1.0f, 1.0f, height, 0);
+            p.lineTo (static_cast<float>(sample), point);
         }
         
         g.strokePath(p, juce::PathStrokeType (2));
@@ -63,7 +60,10 @@ void WaveThumbnail::paint (juce::Graphics& g)
         auto playHeadPosition = juce::jmap<int> (processor.getSampleCount(), 0, processor.getWaveForm().getNumSamples(), 0, getWidth());
         
         g.setColour (juce::Colours::white);
-        g.drawLine (playHeadPosition, 0, playHeadPosition, getHeight(), 2.0f);
+
+        const auto playPosition = static_cast<float>(playHeadPosition);
+
+        g.drawLine (playPosition, 0, playPosition, static_cast<float>(getHeight()), 2.0f);
         
         g.setColour (juce::Colours::black.withAlpha (0.2f));
         g.fillRect (0, 0, playHeadPosition, getHeight());
@@ -85,20 +85,20 @@ void WaveThumbnail::resized()
 
 bool WaveThumbnail::isInterestedInFileDrag (const juce::StringArray& files)
 {
-    for (auto file : files)
+    for (const auto& file : files)
     {
         if (file.contains (".wav") || file.contains (".mp3") || file.contains (".aif"))
         {
             return true;
         }
     }
-    
+
     return false;
 }
 
 void WaveThumbnail::filesDropped (const juce::StringArray& files, int x, int y)
 {
-    for (auto file : files)
+    for (const auto& file : files)
     {
         if (isInterestedInFileDrag (file))
         {
